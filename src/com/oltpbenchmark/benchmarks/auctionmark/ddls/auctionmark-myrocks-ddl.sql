@@ -113,6 +113,7 @@ CREATE TABLE USERACCT (
     PRIMARY KEY (u_id)
 );
 CREATE INDEX IDX_USERACCT_REGION ON USERACCT (u_id, u_r_id);
+CREATE INDEX IDX_USERACCT_REGION_REF ON USERACCT (u_r_id);
 
 -- ================================================================
 -- USERACCT_ATTRIBUTES
@@ -126,6 +127,7 @@ CREATE TABLE USERACCT_ATTRIBUTES (
     u_created           TIMESTAMP,
     PRIMARY KEY (ua_id, ua_u_id)
 );
+CREATE INDEX IDX_USERACCT_ATTR_UID ON USERACCT_ATTRIBUTES (ua_u_id);
 
 -- ================================================================
 -- CATEGORY
@@ -155,6 +157,7 @@ CREATE TABLE GLOBAL_ATTRIBUTE_GROUP (
     gag_name            VARCHAR(100) NOT NULL,
     PRIMARY KEY (gag_id)
 );
+CREATE INDEX IDX_GLOBAL_ATTR_GRP ON GLOBAL_ATTRIBUTE_GROUP (gag_c_id);
 
 -- ================================================================
 -- GLOBAL_ATTRIBUTE_VALUE
@@ -170,6 +173,7 @@ CREATE TABLE GLOBAL_ATTRIBUTE_VALUE (
     gav_name            VARCHAR(100) NOT NULL,
     PRIMARY KEY (gav_id, gav_gag_id)
 );
+CREATE INDEX IDX_GLOBAL_ATTR_VAL ON GLOBAL_ATTRIBUTE_VALUE (gav_gag_id);
 
 -- ================================================================
 -- ITEM
@@ -218,6 +222,7 @@ CREATE TABLE ITEM (
     PRIMARY KEY (i_id, i_u_id)
 );
 CREATE INDEX IDX_ITEM_SELLER ON ITEM (i_u_id);
+CREATE INDEX IDX_ITEM_CATEGORY ON ITEM (i_c_id);
 
 -- ================================================================
 -- ITEM_ATTRIBUTE
@@ -237,6 +242,8 @@ CREATE TABLE ITEM_ATTRIBUTE (
 //    FOREIGN KEY (ia_gav_id, ia_gag_id) REFERENCES GLOBAL_ATTRIBUTE_VALUE (gav_id, gav_gag_id),
     PRIMARY KEY (ia_id, ia_i_id, ia_u_id)
 );
+CREATE INDEX IDX_ITEM_ATTR_ITEM ON ITEM_ATTRIBUTE (ia_i_id, ia_u_id);
+CREATE INDEX IDX_ITEM_ATTR_GAV ON ITEM_ATTRIBUTE (ia_gav_id, ia_gag_id);
 
 -- ================================================================
 -- ITEM_IMAGE
@@ -253,6 +260,7 @@ CREATE TABLE ITEM_IMAGE (
 //    FOREIGN KEY (ii_i_id, ii_u_id) REFERENCES ITEM (i_id, i_u_id) ON DELETE CASCADE,
     PRIMARY KEY (ii_id, ii_i_id, ii_u_id)
 );
+CREATE INDEX IDX_ITEM_IMAGE_ITEM ON ITEM_IMAGE (ii_i_id, ii_u_id);
 
 -- ================================================================
 -- ITEM_COMMENT
@@ -276,7 +284,7 @@ CREATE TABLE ITEM_COMMENT (
 //    FOREIGN KEY (ic_i_id, ic_u_id) REFERENCES ITEM (i_id, i_u_id) ON DELETE CASCADE,
     PRIMARY KEY (ic_id, ic_i_id, ic_u_id)
 ); 
--- CREATE INDEX IDX_ITEM_COMMENT ON ITEM_COMMENT (ic_i_id, ic_u_id);
+CREATE INDEX IDX_ITEM_COMMENT ON ITEM_COMMENT (ic_i_id, ic_u_id);
 
 -- ================================================================
 -- ITEM_BID
@@ -302,6 +310,7 @@ CREATE TABLE ITEM_BID (
     PRIMARY KEY (ib_id, ib_i_id, ib_u_id)
 );
 CREATE INDEX IDX_ITEM_BID ON ITEM_BID (ib_i_id, ib_u_id);
+
 -- ================================================================
 -- ITEM_MAX_BID
 -- Cross-reference table to the current max bid for an auction
@@ -318,6 +327,8 @@ CREATE TABLE ITEM_MAX_BID (
 //    FOREIGN KEY (imb_ib_id, imb_ib_i_id, imb_ib_u_id) REFERENCES ITEM_BID (ib_id, ib_i_id, ib_u_id) ON DELETE CASCADE,
     PRIMARY KEY (imb_i_id, imb_u_id)
 );
+CREATE INDEX IDX_ITEM_MAX_BID_ITEM ON ITEM_MAX_BID (imb_i_id, imb_u_id);
+CREATE INDEX IDX_ITEM_MAX_BID_ITEM_BID ON ITEM_MAX_BID (imb_ib_id, imb_ib_i_id, imb_ib_u_id);
 
 -- ================================================================
 -- ITEM_PURCHASE
@@ -335,6 +346,7 @@ CREATE TABLE ITEM_PURCHASE (
 //    FOREIGN KEY (ip_ib_id, ip_ib_i_id, ip_ib_u_id) REFERENCES ITEM_BID (ib_id, ib_i_id, ib_u_id) ON DELETE CASCADE,
     PRIMARY KEY (ip_id, ip_ib_id, ip_ib_i_id, ip_ib_u_id)
 );
+CREATE INDEX IDX_ITEM_PUR_BID ON ITEM_PURCHASE (ip_ib_id, ip_ib_i_id, ip_ib_u_id);
 
 -- ================================================================
 -- USERACCT_FEEDBACK
@@ -359,6 +371,7 @@ CREATE TABLE USERACCT_FEEDBACK (
     PRIMARY KEY (uf_u_id, uf_i_id, uf_i_u_id, uf_from_id),
     CHECK (uf_u_id <> uf_from_id)
 );
+CREATE INDEX IDX_USERACCT_FEEDBACK_ITEM ON USERACCT_FEEDBACK (uf_i_id, uf_i_u_id);
 
 -- ================================================================
 -- USERACCT_ITEM
@@ -377,7 +390,8 @@ CREATE TABLE USERACCT_ITEM (
 //    FOREIGN KEY (ui_ip_id, ui_ip_ib_id, ui_ip_ib_i_id, ui_ip_ib_u_id) REFERENCES ITEM_PURCHASE (ip_id, ip_ib_id, ip_ib_i_id, ip_ib_u_id) ON DELETE CASCADE,
     PRIMARY KEY (ui_u_id, ui_i_id, ui_i_u_id)
 );
--- CREATE INDEX IDX_USERACCT_ITEM_ID ON USERACCT_ITEM (ui_i_id);
+CREATE INDEX IDX_USERACCT_ITEM_ID ON USERACCT_ITEM (ui_i_id);
+CREATE INDEX IDX_USERACCT_ITEM_PURCHASE ON USERACCT_ITEM (ui_ip_id, ui_ip_ib_id, ui_ip_ib_i_id, ui_ip_ib_u_id);
 
 -- ================================================================
 -- USERACCT_WATCH
@@ -391,7 +405,7 @@ CREATE TABLE USERACCT_WATCH (
 //    FOREIGN KEY (uw_i_id, uw_i_u_id) REFERENCES ITEM (i_id, i_u_id) ON DELETE CASCADE,
     PRIMARY KEY (uw_u_id, uw_i_id, uw_i_u_id)
 );
-
+CREATE INDEX IDX_USERACCT_WATCH_ITEM ON USERACCT_WATCH (uw_i_id, uw_i_u_id);
 
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
