@@ -327,7 +327,6 @@ CREATE TABLE ITEM_MAX_BID (
 //    FOREIGN KEY (imb_ib_id, imb_ib_i_id, imb_ib_u_id) REFERENCES ITEM_BID (ib_id, ib_i_id, ib_u_id) ON DELETE CASCADE,
     PRIMARY KEY (imb_i_id, imb_u_id)
 );
-CREATE INDEX IDX_ITEM_MAX_BID_ITEM ON ITEM_MAX_BID (imb_i_id, imb_u_id);
 CREATE INDEX IDX_ITEM_MAX_BID_ITEM_BID ON ITEM_MAX_BID (imb_ib_id, imb_ib_i_id, imb_ib_u_id);
 
 -- ================================================================
