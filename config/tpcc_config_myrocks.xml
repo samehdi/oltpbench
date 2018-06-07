@@ -10,7 +10,7 @@
     <isolation>TRANSACTION_REPEATABLE_READ</isolation>
     
     <!-- Scale factor is the number of warehouses in TPCC -->
-    <scalefactor>32</scalefactor>
+    <scalefactor>100</scalefactor>
     
     <!-- The workload -->
     <terminals>32</terminals>
