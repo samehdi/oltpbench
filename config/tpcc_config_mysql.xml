@@ -4,20 +4,21 @@
     <!-- Connection details -->
     <dbtype>mysql</dbtype>
     <driver>com.mysql.jdbc.Driver</driver>
-    <DBUrl>jdbc:mysql://localhost:3306/tpcc</DBUrl>
+    <DBUrl>jdbc:mysql://10.10.1.1:3306/tpcc?useSSL=false</DBUrl>
     <username>root</username>
     <password></password>
     <isolation>TRANSACTION_SERIALIZABLE</isolation>
     
     <!-- Scale factor is the number of warehouses in TPCC -->
-    <scalefactor>2</scalefactor>
+    <scalefactor>100</scalefactor>
     
     <!-- The workload -->
-    <terminals>2</terminals>
+    <terminals>50</terminals>
     <works>
         <work>
-          <time>60</time>
-          <rate>10000</rate>
+          <time>300</time>
+	  <warmup>300</warmup>
+          <rate>unlimited</rate>
           <weights>45,43,4,4,4</weights>
         </work>
 	</works>
