@@ -6,7 +6,7 @@
 	<driver>com.mysql.jdbc.Driver</driver>
 	<DBUrl>jdbc:mysql://localhost:3306/linkdb?elideSetAutoCommits=true&amp;useLocalTransactionState=true&amp;allowMultiQueries=true&amp;useLocalSessionState=true&amp;useAffectedRows=true&amp;useSSL=false</DBUrl>
 	<username>root</username>
-	<password>hello</password>
+	<password></password>
 
 	<isolation>TRANSACTION_SERIALIZABLE</isolation>
 
